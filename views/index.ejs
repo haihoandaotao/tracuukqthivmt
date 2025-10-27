@@ -1,0 +1,45 @@
+<%- include('partials/hero', { title: appTitle }) %>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <form method="post" action="/lookup">
+          <div class="input-group input-group-lg">
+            <span class="input-group-text fw-semibold">Số CCCD</span>
+            <input type="text" name="cccd" class="form-control form-control-lg cccd-input" placeholder="Nhập số Căn cước công dân (CCCD)" value="<%= query %>" required>
+            <button class="btn btn-primary btn-lg px-4" type="submit">TRA CỨU</button>
+          </div>
+        </form>
+        <% if (error) { %>
+          <div class="alert alert-danger mt-3" role="alert"><%= error %></div>
+        <% } %>
+        <% if (result) { %>
+          <div class="mt-4">
+            <h5>Kết quả tra cứu</h5>
+            <div class="row mb-2">
+              <div class="col-sm-6"><strong>Họ và tên:</strong> <%= result.ho_ten %></div>
+              <div class="col-sm-6"><strong>Số báo danh:</strong> <%= result.so_bao_danh %></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-sm-6"><strong>Ngày sinh:</strong> <%= result.ngay_sinh %></div>
+              <div class="col-sm-6"><strong>CCCD:</strong> <%= result.cccd %></div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr><th>STT</th><th>Nội dung thi</th><th class="text-end">Điểm</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>Nội dung thi trắc nghiệm</td><td class="text-end"><%= result.diem_trac_nghiem %></td></tr>
+                  <tr><td>2</td><td>Nội dung thi vẽ tĩnh vật</td><td class="text-end"><%= result.diem_ve_tinh_vat %></td></tr>
+                  <tr class="table-light fw-bold"><td>Tổng</td><td>Điểm tổng kết</td><td class="text-end"><%= result.diem_tong %></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

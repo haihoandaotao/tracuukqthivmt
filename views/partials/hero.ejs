@@ -1,0 +1,14 @@
+<div class="text-center mb-4">
+  <h1 class="display-6 fw-bold lh-sm mb-0">
+    <% if (typeof titleLine1 !== 'undefined' && typeof titleLine2 !== 'undefined') { %>
+      <div><%= titleLine1 %></div>
+      <div><%= titleLine2 %></div>
+    <% } else if (typeof title !== 'undefined') { %>
+      <%= title %>
+    <% } else { %>
+      TRA CỨU KẾT QUẢ<br/>
+      KỲ THI ĐÁNH GIÁ NĂNG LỰC MỸ THUẬT 2026
+    <% } %>
+  </h1>
+  
+</div>
