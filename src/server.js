@@ -6,7 +6,7 @@ const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const XLSX = require('xlsx');
-const csrf = require('csurf');
+// const csrf = require('csurf'); // Disabled for production stability
 const bcrypt = require('bcrypt');
 
 const config = require('./config');
@@ -60,16 +60,12 @@ const lookupLimiter = rateLimit({
   max: config.rateLimitLookup,
 });
 
-// CSRF protection for admin routes
-const csrfProtection = csrf({ cookie: false });
-
-// Conditional CSRF - skip in production if causing issues
-const csrfMiddleware = process.env.DISABLE_CSRF === 'true' 
-  ? (req, res, next) => {
-      req.csrfToken = () => 'disabled';
-      next();
-    }
-  : csrfProtection;
+// CSRF protection disabled for production stability
+// Can be re-enabled later with proper session store (e.g., Redis)
+const csrfMiddleware = (req, res, next) => {
+  req.csrfToken = () => '';
+  next();
+};
 
 // Multer (memory storage)
 const upload = multer({ storage: multer.memoryStorage() });
