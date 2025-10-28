@@ -56,7 +56,7 @@ const lookupLimiter = rateLimit({
 });
 
 // CSRF protection for admin routes
-const csrfProtection = csrf();
+const csrfProtection = csrf({ cookie: false });
 
 // Multer (memory storage)
 const upload = multer({ storage: multer.memoryStorage() });
