@@ -123,19 +123,31 @@ app.get('/admin/login', csrfMiddleware, (req, res) => {
 
 app.post('/admin/login', csrfMiddleware, async (req, res) => {
   const { username, password } = req.body;
+  console.log('Login attempt:', { username, hasPassword: !!password });
+  
   if (!username || !password) {
     return res.status(400).render('admin/login', { error: 'Thiếu thông tin đăng nhập.', csrfToken: req.csrfToken() });
   }
+  
+  console.log('Config username:', config.adminUsername);
+  console.log('Config hash:', config.adminPasswordHash);
+  
   if (username !== config.adminUsername) {
+    console.log('Username mismatch');
     return res.status(401).render('admin/login', { error: 'Sai tên đăng nhập hoặc mật khẩu.', csrfToken: req.csrfToken() });
   }
+  
   const ok = config.adminPasswordHash
     ? await bcrypt.compare(password, config.adminPasswordHash)
     : false;
+    
+  console.log('Password check result:', ok);
+  
   if (!ok) {
     return res.status(401).render('admin/login', { error: 'Sai tên đăng nhập hoặc mật khẩu.', csrfToken: req.csrfToken() });
   }
   req.session.user = { username };
+  console.log('Login successful, redirecting...');
   res.redirect('/admin');
 });
 
