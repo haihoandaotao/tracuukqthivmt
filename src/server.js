@@ -63,6 +63,14 @@ const lookupLimiter = rateLimit({
 // CSRF protection for admin routes
 const csrfProtection = csrf({ cookie: false });
 
+// Conditional CSRF - skip in production if causing issues
+const csrfMiddleware = process.env.DISABLE_CSRF === 'true' 
+  ? (req, res, next) => {
+      req.csrfToken = () => 'disabled';
+      next();
+    }
+  : csrfProtection;
+
 // Multer (memory storage)
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -112,12 +120,12 @@ app.post('/lookup', lookupLimiter, (req, res) => {
 });
 
 // Routes: Admin auth
-app.get('/admin/login', csrfProtection, (req, res) => {
+app.get('/admin/login', csrfMiddleware, (req, res) => {
   if (isAuthenticated(req)) return res.redirect('/admin');
   res.render('admin/login', { error: null, csrfToken: req.csrfToken() });
 });
 
-app.post('/admin/login', csrfProtection, async (req, res) => {
+app.post('/admin/login', csrfMiddleware, async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).render('admin/login', { error: 'Thiếu thông tin đăng nhập.', csrfToken: req.csrfToken() });
@@ -143,7 +151,7 @@ app.get('/admin/logout', (req, res) => {
 });
 
 // Admin dashboard
-app.get('/admin', requireAuth, csrfProtection, (req, res) => {
+app.get('/admin', requireAuth, csrfMiddleware, (req, res) => {
   res.render('admin/dashboard', { success: null, error: null, csrfToken: req.csrfToken() });
 });
 
@@ -168,8 +176,8 @@ app.get('/admin/template.xlsx', requireAuth, (req, res) => {
 });
 
 // Import handler
-// Important: for multipart/form-data, parse with multer BEFORE csrfProtection
-app.post('/admin/import', requireAuth, upload.single('file'), csrfProtection, (req, res) => {
+// Important: for multipart/form-data, parse with multer BEFORE csrfMiddleware
+app.post('/admin/import', requireAuth, upload.single('file'), csrfMiddleware, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).render('admin/dashboard', { error: 'Vui lòng chọn file Excel (.xlsx).', success: null, csrfToken: req.csrfToken() });
