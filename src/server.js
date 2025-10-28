@@ -42,7 +42,7 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Changed to false for testing
     maxAge: 1000 * 60 * 60, // 1 hour
   },
 };
