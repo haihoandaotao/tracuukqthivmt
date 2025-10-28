@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h5 class="mb-3">Quản lý Dữ liệu Điểm thi</h5>
+        <div class="mb-3">
+          <a class="btn btn-outline-secondary btn-sm" href="/admin/template.xlsx">Tải file Excel mẫu</a>
+        </div>
+        <% if (error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+          <div class="alert alert-success"><%= success %></div>
+        <% } %>
+        <form method="post" action="/admin/import" enctype="multipart/form-data">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="mb-3">
+            <label class="form-label">Chọn file Excel (.xlsx)</label>
+            <input class="form-control" type="file" name="file" accept=".xlsx" required>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="wipe" id="wipeChk">
+            <label class="form-check-label" for="wipeChk">Xóa toàn bộ dữ liệu cũ trước khi import</label>
+          </div>
+          <div class="d-grid d-md-flex gap-2">
+            <button class="btn btn-primary" type="submit">Tải lên</button>
+            <a class="btn btn-outline-secondary" href="/">Về trang tra cứu</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

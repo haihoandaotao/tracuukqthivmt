@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: tracuukqthive
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      # Paste the bcrypt hash you created locally
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
+      - key: RATE_LIMIT_LOOKUP
+        value: "120"
+      - key: WEIGHT_TRACNGHIEM
+        value: "1"
+      - key: WEIGHT_VE_TINH_VAT
+        value: "1"
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: results-data
+      mountPath: /var/data
+      sizeGB: 1
