@@ -39,7 +39,7 @@ app.use(
     name: 'sid',
     secret: config.sessionSecret,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,  // Changed to true to ensure session is created
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
