@@ -34,20 +34,25 @@ app.set('layout', 'layout');
 app.use(express.urlencoded({ extended: true }));
 
 // Sessions
-app.use(
-  session({
-    name: 'sid',
-    secret: config.sessionSecret,
-    resave: false,
-    saveUninitialized: true,  // Changed to true to ensure session is created
-    cookie: {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 1000 * 60 * 60, // 1 hour
-    },
-  })
-);
+const sessionConfig = {
+  name: 'sid',
+  secret: config.sessionSecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60, // 1 hour
+  },
+};
+
+// Suppress MemoryStore warning for production (acceptable for small apps)
+if (process.env.NODE_ENV === 'production') {
+  sessionConfig.store = new session.MemoryStore();
+}
+
+app.use(session(sessionConfig));
 
 // Rate limiter for lookup endpoint
 const lookupLimiter = rateLimit({
